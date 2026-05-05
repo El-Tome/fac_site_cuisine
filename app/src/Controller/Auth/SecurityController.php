@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -96,5 +97,43 @@ class SecurityController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('/user/delete', name: 'app_user_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($request->isMethod('GET')) {
+            return $this->render('user/delete.html.twig');
+        }
+
+        if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('delete_account', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Invalid security token');
+                return $this->render('user/delete.html.twig');
+            }
+
+            $confirmed = $request->request->get('confirm_delete');
+            if (!$confirmed) {
+                $this->addFlash('error', 'You must confirm account deletion');
+                return $this->render('user/delete.html.twig');
+            }
+
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+
+            return $this->redirectToRoute('app_home_page');
+        }
+
+        return $this->redirectToRoute('app_user_profile');
     }
 }

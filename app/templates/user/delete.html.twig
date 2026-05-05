@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">⚠️ Attention</h4>
+                    <p>Vous êtes sur le point de <strong>supprimer définitivement</strong> votre compte.</p>
+                    <hr>
+                    <p class="mb-0">Cette action est <strong>irréversible</strong>. Toutes vos données seront supprimées.</p>
+                </div>
+
+                {% if app.session.flashbag.has('error') %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for message in app.session.flashbag.get('error') %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST" class="mt-4">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="confirm_delete" id="confirm_delete" required>
+                        <label class="form-check-label" for="confirm_delete">
+                            Je comprends que la suppression de mon compte est définitive et irréversible
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_account') }}">
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg">Supprimer mon compte</button>
+                        <a href="{{ path('app_user_profile') }}" class="btn btn-secondary btn-lg">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

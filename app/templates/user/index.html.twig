@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container mt-5">
+    <div>
         {% if app.session.flashbag.has('success') %}
-            <div class="alert alert-success" role="alert">
+            <div role="alert">
                 {% for message in app.session.flashbag.get('success') %}
                     {{ message }}
                 {% endfor %}
@@ -12,11 +12,14 @@
 
         <h1>Salut {{ user.firstName }} {{ user.lastName }}</h1>
 
-        <div class="mt-4">
-            <a href="{{ path('app_user_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+        <div>
+            <a href="{{ path('app_user_edit') }}">Modifier mon profil</a>
         </div>
 
-        {#        supprimer mon compte#}
+        <div>
+            <a href="{{ path('app_user_delete') }}">Supprimer mon compte</a>
+        </div>
+
         {#        mes recettes#}
         {#        plat like#}
         {#        utilisateur suivie#}
