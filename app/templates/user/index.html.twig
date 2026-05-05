@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% if app.session.flashbag.has('success') %}
+            <div class="alert alert-success" role="alert">
+                {% for message in app.session.flashbag.get('success') %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h1>Salut {{ user.firstName }} {{ user.lastName }}</h1>
+
+        <div class="mt-4">
+            <a href="{{ path('app_user_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+        </div>
+
+        {#        supprimer mon compte#}
+        {#        mes recettes#}
+        {#        plat like#}
+        {#        utilisateur suivie#}
+    </div>
+{% endblock %}

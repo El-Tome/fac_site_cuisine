@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Edit Profile</h1>
+
+        {% if app.session.flashbag.has('success') %}
+            <div class="alert alert-success" role="alert">
+                {% for message in app.session.flashbag.get('success') %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if app.session.flashbag.has('error') %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in app.session.flashbag.get('error') %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {{ form_start(form) }}
+            {{ form_row(form.email, {
+                label: 'Email',
+                attr: { class: 'form-control' }
+            }) }}
+
+            {{ form_row(form.pseudo, {
+                label: 'Username',
+                attr: { class: 'form-control' }
+            }) }}
+
+            {{ form_row(form.firstName, {
+                label: 'First Name',
+                attr: { class: 'form-control' }
+            }) }}
+
+            {{ form_row(form.lastName, {
+                label: 'Last Name',
+                attr: { class: 'form-control' }
+            }) }}
+
+            <hr class="my-4">
+
+            <h5 class="mb-3">Security</h5>
+
+            {{ form_row(form.currentPassword, {
+                label: 'Current Password',
+                attr: { class: 'form-control', autocomplete: 'current-password' }
+            }) }}
+
+            {{ form_row(form.plainPassword, {
+                label: 'New Password (optional)',
+                attr: {
+                    class: 'form-control',
+                    placeholder: 'Leave blank to keep current password',
+                    autocomplete: 'new-password'
+                }
+            }) }}
+
+            <div class="mt-4">
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+                <a href="{{ path('app_user_profile') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
