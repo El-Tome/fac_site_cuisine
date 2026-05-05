@@ -1,0 +1,17 @@
+<header>
+    <a href="{{ path('app_home_page') }}">
+        <img src="/images/logo.png" alt="Page principale" />
+    </a>
+
+    <div>
+        <a href="{{ path('app_home_page') }}">Créer une recette</a>
+        <a href="{{ path('app_home_page') }}">Favorie</a>
+        <a href="{{ path('app_home_page') }}">Mes plats de la semaine</a>
+    </div>
+
+    {% if app.user %}
+        <a href="{{ path('app_user_profile') }}" class="btn btn-orange">{{ app.user.pseudo }}#{{ app.user.pseudoId }} </a>
+    {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-orange">Se connecter</a>
+    {% endif %}
+</header>

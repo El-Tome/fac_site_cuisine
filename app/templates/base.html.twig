@@ -15,9 +15,12 @@
 
         {% block stylesheets %}
         {% endblock %}
+        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" href="/css/header.css">
 
         {% block javascripts %}
         {% endblock %}
+        <script src="/js/header.js" defer></script>
 
         {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
         {% if frankenphpHotReload %}
@@ -27,9 +30,11 @@
         {% endif %}
     </head>
     <body>
-        {{ include('_partial/_nav_bar.html.twig') }}
+        {{ include('_partial/_header.html.twig') }}
 
-        {% block body %}{% endblock %}
+        <div id="container">
+            {% block body %}{% endblock %}
+        </div>
 
         {{ include('_partial/_footer.html.twig') }}
     </body>
