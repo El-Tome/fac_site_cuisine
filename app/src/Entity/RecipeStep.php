@@ -24,6 +24,9 @@ class RecipeStep
     #[ORM\JoinColumn(nullable: false)]
     private ?Recipe $recipe = null;
 
+    #[ORM\Column]
+    private ?int $step = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +64,18 @@ class RecipeStep
     public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
+
+        return $this;
+    }
+
+    public function getStep(): ?int
+    {
+        return $this->step;
+    }
+
+    public function setStep(int $step): static
+    {
+        $this->step = $step;
 
         return $this;
     }
