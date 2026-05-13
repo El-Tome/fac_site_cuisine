@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>{{ recipe.title }}</h1>
+
+    {% if recipe.imageUrl %}
+        <img src="{{ recipe.imageUrl }}" alt="{{ recipe.title }}" class="recipe-image">
+    {% endif %}
+
+    <div class="recipe-meta">
+        <span>Difficulté : {{ recipe.difficulty.getLabel() }}</span>
+        <span>Préparation : {{ recipe.prepTime }} min</span>
+        {% if recipe.cookTime %}
+            <span>Cuisson : {{ recipe.cookTime }} min</span>
+        {% endif %}
+        <span>Portions : {{ recipe.servings }}</span>
+        <span>Par {{ recipe.author.pseudo }}</span>
+    </div>
+
+    <p class="mt-3">{{ recipe.description }}</p>
+
+    <section class="mt-4">
+        <h2>Ingrédients</h2>
+        <ul>
+            {% for ri in recipe.recipeIngredients %}
+                <li>{{ ri.quantity }} {{ ri.unit.getLabel() }} de {{ ri.ingredient.nom }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h2>Étapes</h2>
+        <ol>
+            {% for step in recipe.recipeSteps|sort((a, b) => a.step <=> b.step) %}
+                <li>
+                    <strong>{{ step.title }}</strong>
+                    {% if step.explanation %}
+                        <p>{{ step.explanation }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </section>
+
+    <div class="mt-4">
+        <a href="{{ path('app_home_page') }}" class="btn btn-secondary">Retour</a>
+
+        {% if app.user and app.user == recipe.author %}
+            <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}" class="btn btn-primary">Modifier</a>
+
+            <form method="post" action="{{ path('app_recipe_delete', { id: recipe.id }) }}"
+                  style="display:inline"
+                  onsubmit="return confirm('Supprimer définitivement cette recette ?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

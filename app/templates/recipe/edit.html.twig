@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier « {{ recipe.title }} »{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/recipe-form.css">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier la recette</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+
+        <section class="recipe-section">
+            <h2>Informations générales</h2>
+
+            {{ form_row(form.title, { label: 'Titre', attr: { class: 'form-control' } }) }}
+            {{ form_row(form.description, { label: 'Description', attr: { class: 'form-control' } }) }}
+
+            <div class="form-row-group">
+                {{ form_row(form.prep_time, { attr: { class: 'form-control' } }) }}
+                {{ form_row(form.cookTime, { attr: { class: 'form-control' } }) }}
+                {{ form_row(form.servings, { attr: { class: 'form-control' } }) }}
+            </div>
+
+            {{ form_row(form.difficulty, { label: 'Difficulté', attr: { class: 'form-control' } }) }}
+            {{ form_row(form.image_url, { attr: { class: 'form-control' } }) }}
+        </section>
+
+        <section class="recipe-section">
+            <h2>Ingrédients</h2>
+
+            <div id="ingredients-collection"
+                 data-prototype="{{ form_widget(form.recipeIngredients.vars.prototype)|e('html_attr') }}"
+                 data-index="{{ form.recipeIngredients|length }}">
+
+                {% for ingredientForm in form.recipeIngredients %}
+                    <div class="collection-item">
+                        <div class="collection-item-fields">
+                            {{ form_row(ingredientForm.ingredient, { label: 'Ingrédient', attr: { class: 'form-control' } }) }}
+                            {{ form_row(ingredientForm.quantity, { label: 'Quantité', attr: { class: 'form-control' } }) }}
+                            {{ form_row(ingredientForm.unit, { label: 'Unité', attr: { class: 'form-control' } }) }}
+                        </div>
+                        <button type="button" class="btn-remove-item">Supprimer</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" id="add-ingredient" class="btn btn-secondary">+ Ajouter un ingrédient</button>
+        </section>
+
+        <section class="recipe-section">
+            <h2>Étapes</h2>
+
+            <div id="steps-collection"
+                 data-prototype="{{ form_widget(form.recipeSteps.vars.prototype)|e('html_attr') }}"
+                 data-index="{{ form.recipeSteps|length }}">
+
+                {% for stepForm in form.recipeSteps %}
+                    <div class="collection-item">
+                        <div class="collection-item-fields">
+                            {{ form_row(stepForm.title, { label: 'Titre', attr: { class: 'form-control' } }) }}
+                            {{ form_row(stepForm.explanation, { label: 'Explication', attr: { class: 'form-control' } }) }}
+                        </div>
+                        <button type="button" class="btn-remove-item">Supprimer</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" id="add-step" class="btn btn-secondary">+ Ajouter une étape</button>
+        </section>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="btn btn-secondary">Annuler</a>
+        </div>
+
+    {{ form_end(form) }}
+
+    <hr class="my-5">
+
+    <div class="danger-zone">
+        <h3>Zone dangereuse</h3>
+        <p>Cette action est irréversible.</p>
+        <form method="post" action="{{ path('app_recipe_delete', { id: recipe.id }) }}"
+              onsubmit="return confirm('Supprimer définitivement cette recette ?')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer la recette</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function addCollectionItem(collectionId, buttonId) {
+    const collection = document.getElementById(collectionId);
+    const button = document.getElementById(buttonId);
+
+    button.addEventListener('click', () => {
+        const index = parseInt(collection.dataset.index);
+        const prototype = collection.dataset.prototype.replace(/__name__/g, index);
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('collection-item');
+        wrapper.innerHTML = `
+            <div class="collection-item-fields">${prototype}</div>
+            <button type="button" class="btn-remove-item">Supprimer</button>
+        `;
+
+        wrapper.querySelector('.btn-remove-item').addEventListener('click', () => wrapper.remove());
+
+        collection.appendChild(wrapper);
+        collection.dataset.index = index + 1;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    addCollectionItem('ingredients-collection', 'add-ingredient');
+    addCollectionItem('steps-collection', 'add-step');
+
+    document.querySelectorAll('.btn-remove-item').forEach(btn => {
+        btn.addEventListener('click', () => btn.closest('.collection-item').remove());
+    });
+});
+</script>
+{% endblock %}

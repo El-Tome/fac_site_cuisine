@@ -24,7 +24,25 @@
             <a href="{{ path('app_logout') }}">Déconnexion</a>
         </div>
 
-        {#        mes recettes#}
+        <div>
+            <h2>Mes recettes</h2>
+            <a href="{{ path('app_recipe_new') }}">+ Créer une recette</a>
+
+            {% if recipes is empty %}
+                <p>Vous n'avez pas encore créé de recette.</p>
+            {% else %}
+                <ul>
+                    {% for recipe in recipes %}
+                        <li>
+                            <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
+                            —
+                            <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}">Modifier</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
         {#        plat like#}
         {#        utilisateur suivie#}
     </div>
