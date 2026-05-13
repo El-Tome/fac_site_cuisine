@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ingrédients{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <h1>Ingrédients</h1>
+        <div style="display:flex; gap:0.5rem;">
+            <a href="{{ path('app_ingredient_category_index') }}" class="btn btn-secondary">Gérer les catégories</a>
+            <a href="{{ path('app_ingredient_new') }}" class="btn btn-primary">+ Ajouter un ingrédient</a>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% if ingredients is empty %}
+        <p>Aucun ingrédient pour l'instant.</p>
+    {% else %}
+        <table class="ingredient-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Catégories</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient in ingredients %}
+                    <tr>
+                        <td>{{ ingredient.nom }}</td>
+                        <td>
+                            {% for cat in ingredient.categories %}
+                                <span class="badge">{{ cat.name }}</span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_ingredient_edit', { id: ingredient.id }) }}" class="btn btn-sm btn-secondary">Modifier</a>
+
+                            <form method="post" action="{{ path('app_ingredient_delete', { id: ingredient.id }) }}"
+                                  style="display:inline"
+                                  onsubmit="return confirm('Supprimer « {{ ingredient.nom }} » ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-ingredient-' ~ ingredient.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

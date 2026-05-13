@@ -68,6 +68,42 @@
     margin-top: 0.5rem;
 }
 
+.ingredient-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ingredient-table th,
+.ingredient-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.ingredient-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.badge {
+    display: inline-block;
+    background: #e8f4e8;
+    color: #2d6a2d;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    margin-right: 4px;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+}
+
+.text-muted {
+    color: #999;
+}
+
 .danger-zone {
     border: 1px solid #e53e3e;
     border-radius: 8px;

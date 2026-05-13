@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle catégorie{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Ajouter une catégorie</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name, { label: 'Nom', attr: { class: 'form-control' } }) }}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <a href="{{ path('app_ingredient_category_index') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

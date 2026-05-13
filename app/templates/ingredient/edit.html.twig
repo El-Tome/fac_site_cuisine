@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier « {{ ingredient.nom }} »{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier l'ingrédient</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom, { label: 'Nom', attr: { class: 'form-control' } }) }}
+        {{ form_row(form.categories) }}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{{ path('app_ingredient_index') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    {{ form_end(form) }}
+
+    <hr class="my-5">
+
+    <div class="danger-zone">
+        <h3>Zone dangereuse</h3>
+        <p>Cette action est irréversible.</p>
+        <form method="post" action="{{ path('app_ingredient_delete', { id: ingredient.id }) }}"
+              onsubmit="return confirm('Supprimer définitivement cet ingrédient ?')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-ingredient-' ~ ingredient.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer l'ingrédient</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

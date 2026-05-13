@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier « {{ category.name }} »{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier la catégorie</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name, { label: 'Nom', attr: { class: 'form-control' } }) }}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{{ path('app_ingredient_category_index') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    {{ form_end(form) }}
+
+    <hr class="my-5">
+
+    <div class="danger-zone">
+        <h3>Zone dangereuse</h3>
+        <p>
+            Cette catégorie contient <strong>{{ category.ingredients|length }}</strong> ingrédient(s).
+            La supprimer retirera uniquement la catégorie, pas les ingrédients.
+        </p>
+        <form method="post" action="{{ path('app_ingredient_category_delete', { id: category.id }) }}"
+              onsubmit="return confirm('Supprimer définitivement cette catégorie ?')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-category-' ~ category.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer la catégorie</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
