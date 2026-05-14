@@ -17,8 +17,8 @@ Guide complet pour un développeur qui récupère le projet pour la première fo
 ## 1. Cloner le projet
 
 ```bash
-git clone <url-du-repo>
-cd projetSiteCuisine
+git clone git@github.com:El-Tome/fac_site_cuisine.git
+cd fac_site_cuisine
 ```
 
 ---

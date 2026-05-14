@@ -72,7 +72,7 @@
                         {% for ri in recipe.recipeIngredients %}
                             <li>
                                 <div class="ingredient-row">
-                                    <span class="ingredient-qty">{{ ri.quantity }} {{ ri.unit.value }}</span>
+                                    <span class="ingredient-qty">{{ ri.quantity }} {{ ri.unit.getLabel() }}</span>
                                     <span class="ingredient-name">{{ ri.ingredient.nom }}</span>
                                 </div>
                             </li>
