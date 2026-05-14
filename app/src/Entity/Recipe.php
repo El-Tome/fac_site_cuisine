@@ -38,6 +38,9 @@ class Recipe
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_url = null;
 
+    #[ORM\Column]
+    private bool $featured = false;
+
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
@@ -152,6 +155,18 @@ class Recipe
     public function setImageUrl(?string $image_url): static
     {
         $this->image_url = $image_url;
+
+        return $this;
+    }
+
+    public function isFeatured(): bool
+    {
+        return $this->featured;
+    }
+
+    public function setFeatured(bool $featured): static
+    {
+        $this->featured = $featured;
 
         return $this;
     }

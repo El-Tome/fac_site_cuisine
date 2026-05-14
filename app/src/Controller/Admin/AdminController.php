@@ -148,6 +148,19 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_dashboard');
     }
 
+    #[Route('/recipe/{id}/feature', name: 'app_admin_feature_recipe', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function featureRecipe(Recipe $recipe, Request $request, EntityManagerInterface $em, RecipeRepository $recipeRepository): Response
+    {
+        if ($this->isCsrfTokenValid('feature-recipe-' . $recipe->getId(), $request->request->get('_token'))) {
+            $recipeRepository->clearFeatured();
+            $recipe->setFeatured(true);
+            $em->flush();
+            $this->addFlash('success', sprintf('« %s » est maintenant mise en avant sur la homepage.', $recipe->getTitle()));
+        }
+
+        return $this->redirectToRoute('app_admin_dashboard');
+    }
+
     #[Route('/recipe/{id}/delete', name: 'app_admin_delete_recipe', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function deleteRecipe(Recipe $recipe, Request $request, EntityManagerInterface $em): Response
     {

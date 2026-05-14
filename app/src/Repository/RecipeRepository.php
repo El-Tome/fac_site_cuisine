@@ -16,6 +16,21 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
+    public function findFeatured(): ?Recipe
+    {
+        return $this->findOneBy(['featured' => true]);
+    }
+
+    public function clearFeatured(): void
+    {
+        $this->createQueryBuilder('r')
+            ->update()
+            ->set('r.featured', ':false')
+            ->setParameter('false', false)
+            ->getQuery()
+            ->execute();
+    }
+
     /** @return Recipe[] */
     public function findRandom(int $limit): array
     {

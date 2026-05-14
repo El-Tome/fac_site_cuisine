@@ -1,0 +1,19 @@
+<a href="{{ path('app_recipe_show', { id: hero.id }) }}" class="hero-card" data-recipe-id="{{ hero.id }}">
+    {% if hero.imageUrl %}
+        <img src="{{ hero.imageUrl }}" alt="{{ hero.title }}" class="hero-card__image">
+    {% endif %}
+    <div class="hero-card__overlay"></div>
+    <div class="hero-card__body">
+        <span class="hero-card__label">{{ hero.difficulty.getLabel() }}</span>
+        <h1 class="hero-card__title">{{ hero.title }}</h1>
+        <p class="hero-card__description">{{ hero.description }}</p>
+        <div class="hero-card__meta">
+            <span>⏱ {{ hero.prepTime }} min de préparation</span>
+            {% if hero.cookTime %}
+                <span>🔥 {{ hero.cookTime }} min de cuisson</span>
+            {% endif %}
+            <span>🍽 {{ hero.servings }} personne{{ hero.servings > 1 ? 's' : '' }}</span>
+        </div>
+        <span class="hero-card__cta">Voir la recette</span>
+    </div>
+</a>

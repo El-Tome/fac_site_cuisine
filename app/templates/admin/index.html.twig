@@ -150,19 +150,28 @@
                 </thead>
                 <tbody>
                     {% for recipe in recipes %}
-                        <tr>
+                        <tr {% if recipe.featured %}class="row--featured"{% endif %}>
                             <td>{{ recipe.id }}</td>
                             <td>
                                 <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
+                                {% if recipe.featured %}<span class="badge-featured">★ Homepage</span>{% endif %}
                             </td>
                             <td>{{ recipe.author.pseudo }}#{{ recipe.author.pseudoId }}</td>
                             <td>{{ recipe.difficulty.value }}</td>
                             <td>
-                                <form method="post" action="{{ path('app_admin_delete_recipe', { id: recipe.id }) }}"
-                                      onsubmit="return confirm('Supprimer la recette « {{ recipe.title }} » ?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
-                                    <button type="submit" class="btn-delete">Supprimer</button>
-                                </form>
+                                <div class="table-actions">
+                                    {% if not recipe.featured %}
+                                        <form method="post" action="{{ path('app_admin_feature_recipe', { id: recipe.id }) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('feature-recipe-' ~ recipe.id) }}">
+                                            <button type="submit" class="btn-feature">★ Mettre en avant</button>
+                                        </form>
+                                    {% endif %}
+                                    <form method="post" action="{{ path('app_admin_delete_recipe', { id: recipe.id }) }}"
+                                          onsubmit="return confirm('Supprimer la recette « {{ recipe.title }} » ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
+                                        <button type="submit" class="btn-delete">Supprimer</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}

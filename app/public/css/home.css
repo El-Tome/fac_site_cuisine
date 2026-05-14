@@ -1,5 +1,65 @@
 .home-page {
-    padding: 2rem 1rem 4rem;
+    padding: 3.5rem 1rem 4rem;
+}
+
+/* ===== Search bar ===== */
+
+.home-search-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.home-search-input {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    background: #fff;
+    color: #1c1c1c;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+}
+
+.home-search-input:focus {
+    outline: none;
+    border-color: #2d6a4f;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+}
+
+.home-search-btn {
+    padding: 0.65rem 1.4rem;
+    background: #2d6a4f;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.home-search-btn:hover { background: #1b4332; }
+
+.home-search-hint {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 1.25rem;
+}
+
+.home-search-hint a {
+    color: #2d6a4f;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ===== Hero wrapper ===== */
+
+.hero-wrapper {
+    margin-bottom: 3rem;
 }
 
 /* ===== Hero card ===== */
@@ -11,7 +71,6 @@
     min-height: 420px;
     display: flex;
     align-items: flex-end;
-    margin-bottom: 3rem;
     background: linear-gradient(135deg, #1b4332 0%, #40916c 100%);
     text-decoration: none;
     color: inherit;

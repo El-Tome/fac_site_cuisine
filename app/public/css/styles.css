@@ -1,5 +1,4 @@
 body {
-    height: 200vh;
     margin: 0;
     padding: 0;
     background-color: #fdf8f2;
@@ -9,8 +8,7 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    top: 70px;
-
+    top: 90px;
 }
 
 .btn {

@@ -9,9 +9,29 @@
 {% block body %}
 <div class="container home-page">
 
-    {% if hero is null %}
+    <form method="get" action="{{ path('app_home_page') }}" class="home-search-form">
+        <input
+            type="search"
+            name="q"
+            value="{{ query }}"
+            placeholder="Rechercher une recette ou un auteur…"
+            aria-label="Rechercher une recette"
+            class="home-search-input"
+            autocomplete="off"
+        >
+        <button type="submit" class="home-search-btn">Rechercher</button>
+    </form>
+
+    {% if query %}
+        <p class="home-search-hint">
+            Résultats pour <strong>{{ query }}</strong>
+            — <a href="{{ path('app_home_page') }}">Effacer</a>
+        </p>
+    {% endif %}
+
+    {% if hero is null and recipes is empty %}
         <div class="home-empty">
-            <p>Aucune recette pour l'instant.</p>
+            <p>{% if query %}Aucune recette ne correspond à votre recherche.{% else %}Aucune recette pour l'instant.{% endif %}</p>
             {% if is_granted('ROLE_EDITOR') %}
                 <a href="{{ path('app_recipe_new') }}" class="btn btn-primary">Créer la première recette</a>
             {% endif %}
@@ -19,29 +39,15 @@
     {% else %}
 
         {# ===== Hero ===== #}
-        <a href="{{ path('app_recipe_show', { id: hero.id }) }}" class="hero-card">
-            {% if hero.imageUrl %}
-                <img src="{{ hero.imageUrl }}" alt="{{ hero.title }}" class="hero-card__image">
-            {% endif %}
-            <div class="hero-card__overlay"></div>
-            <div class="hero-card__body">
-                <span class="hero-card__label">{{ hero.difficulty.getLabel() }}</span>
-                <h1 class="hero-card__title">{{ hero.title }}</h1>
-                <p class="hero-card__description">{{ hero.description }}</p>
-                <div class="hero-card__meta">
-                    <span>⏱ {{ hero.prepTime }} min de préparation</span>
-                    {% if hero.cookTime %}
-                        <span>🔥 {{ hero.cookTime }} min de cuisson</span>
-                    {% endif %}
-                    <span>🍽 {{ hero.servings }} personne{{ hero.servings > 1 ? 's' : '' }}</span>
-                </div>
-                <span class="hero-card__cta">Voir la recette</span>
+        {% if hero is not null %}
+            <div class="hero-wrapper">
+                {% include '_partial/_hero.html.twig' %}
             </div>
-        </a>
+        {% endif %}
 
         {# ===== Grid ===== #}
         {% if recipes is not empty %}
-            <h2 class="section-heading">D'autres recettes</h2>
+            <h2 class="section-heading">{{ query ? 'Recettes trouvées' : 'D\'autres recettes' }}</h2>
             <div class="recipe-grid">
                 {% for recipe in recipes %}
                     <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="recipe-card">

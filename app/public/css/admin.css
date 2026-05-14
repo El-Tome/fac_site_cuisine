@@ -129,6 +129,32 @@
     background: #c2410c;
 }
 
+.btn-feature {
+    background: #854d0e;
+    color: #fff;
+    border: none;
+    padding: .35rem .75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: .85rem;
+    white-space: nowrap;
+}
+
+.btn-feature:hover { background: #713f12; }
+
+.row--featured { background: #fefce8; }
+
+.badge-featured {
+    display: inline-block;
+    background: #fef08a;
+    color: #854d0e;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: .75rem;
+    font-weight: 700;
+    margin-left: .4rem;
+}
+
 .role-badge {
     display: inline-block;
     border-radius: 4px;
