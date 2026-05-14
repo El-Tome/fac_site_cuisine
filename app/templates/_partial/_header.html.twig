@@ -10,6 +10,9 @@
     </div>
 
     {% if app.user %}
+        {% if is_granted('ROLE_EDITOR') %}
+            <a href="{{ path('app_ingredient_index') }}" class="btn btn-editor">Gestion</a>
+        {% endif %}
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_admin_dashboard') }}" class="btn btn-admin">Admin</a>
         {% endif %}

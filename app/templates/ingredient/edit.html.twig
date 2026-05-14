@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier « {{ ingredient.nom }} »{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/recipe-form.css">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier l'ingrédient</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom, { label: 'Nom', attr: { class: 'form-control' } }) }}
+
+        <div class="mt-3">
+            {{ form_label(form.categories) }}
+            <input type="text" id="category-filter" class="form-control category-filter-input"
+                   placeholder="Filtrer les catégories…" autocomplete="off">
+            <div class="categories-checkboxes">
+                {{ form_widget(form.categories) }}
+            </div>
+            {{ form_errors(form.categories) }}
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{{ path('app_ingredient_index') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    {{ form_end(form) }}
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <hr class="my-5">
+
+    <div class="danger-zone">
+        <h3>Zone dangereuse</h3>
+        <p>
+            Cet ingrédient est utilisé dans <strong>{{ ingredient.ingredientUsage|length }}</strong> recette(s).
+            Le supprimer retirera également toutes ces utilisations.
+        </p>
+        <form method="post" action="{{ path('app_ingredient_delete', { id: ingredient.id }) }}"
+              onsubmit="return confirm('Supprimer définitivement « {{ ingredient.nom }} » ?')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-ingredient-' ~ ingredient.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer l'ingrédient</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const filterInput = document.getElementById('category-filter');
+    const container   = document.querySelector('.categories-checkboxes');
+    if (!filterInput || !container) return;
+
+    // Symfony renders <input> and <label> as siblings — move each input inside its label
+    // so we can show/hide the whole pair by toggling the label alone.
+    container.querySelectorAll('label[for]').forEach(label => {
+        const input = document.getElementById(label.htmlFor);
+        if (input && input.parentElement === label.parentElement) {
+            label.insertBefore(input, label.firstChild);
+        }
+    });
+
+    filterInput.addEventListener('input', () => {
+        const q = filterInput.value.toLowerCase().trim();
+        container.querySelectorAll('label').forEach(label => {
+            const show = !q || label.textContent.toLowerCase().includes(q);
+            label.style.display = show ? 'flex' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -68,7 +68,7 @@ final class IngredientCategoryController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_ingredient_category_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(IngredientCategories $category, Request $request, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete-category-' . $category->getId(), $request->request->get('_token'))) {

@@ -2,11 +2,18 @@
 
 {% block title %}Catégories d'ingrédients{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/recipe-form.css">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-5">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+    <div class="manage-header">
         <h1>Catégories d'ingrédients</h1>
-        <a href="{{ path('app_ingredient_category_new') }}" class="btn btn-primary">+ Ajouter une catégorie</a>
+        <div class="manage-header-actions">
+            <a href="{{ path('app_ingredient_index') }}" class="btn btn-secondary">Ingrédients</a>
+            <a href="{{ path('app_ingredient_category_new') }}" class="btn btn-primary">+ Ajouter une catégorie</a>
+        </div>
     </div>
 
     {% for message in app.flashes('success') %}
@@ -14,8 +21,11 @@
     {% endfor %}
 
     {% if categories is empty %}
-        <p>Aucune catégorie pour l'instant.</p>
+        <p class="text-muted">Aucune catégorie pour l'instant.</p>
     {% else %}
+        <input type="text" id="category-search" class="form-control category-filter-input"
+               placeholder="Rechercher une catégorie…" autocomplete="off">
+
         <table class="ingredient-table">
             <thead>
                 <tr>
@@ -24,29 +34,50 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="categories-tbody">
                 {% for category in categories %}
                     <tr>
                         <td>{{ category.name }}</td>
                         <td>{{ category.ingredients|length }}</td>
-                        <td>
+                        <td class="table-actions">
                             <a href="{{ path('app_ingredient_category_edit', { id: category.id }) }}" class="btn btn-sm btn-secondary">Modifier</a>
-
-                            <form method="post" action="{{ path('app_ingredient_category_delete', { id: category.id }) }}"
-                                  style="display:inline"
-                                  onsubmit="return confirm('Supprimer « {{ category.name }} » ?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete-category-' ~ category.id) }}">
-                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
-                            </form>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <form method="post" action="{{ path('app_ingredient_category_delete', { id: category.id }) }}"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Supprimer « {{ category.name }} » ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-category-' ~ category.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <p id="no-category-result" class="text-muted" style="display:none">Aucune catégorie ne correspond à la recherche.</p>
     {% endif %}
-
-    <div class="mt-4">
-        <a href="{{ path('app_ingredient_index') }}" class="btn btn-secondary">← Retour aux ingrédients</a>
-    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const search = document.getElementById('category-search');
+    if (!search) return;
+    const tbody  = document.getElementById('categories-tbody');
+    const noResult = document.getElementById('no-category-result');
+
+    search.addEventListener('input', () => {
+        const q     = search.value.toLowerCase().trim();
+        let visible = 0;
+        tbody.querySelectorAll('tr').forEach(row => {
+            const name = row.cells[0].textContent.toLowerCase();
+            const show = !q || name.includes(q);
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        noResult.style.display = visible === 0 ? '' : 'none';
+    });
+});
+</script>
 {% endblock %}

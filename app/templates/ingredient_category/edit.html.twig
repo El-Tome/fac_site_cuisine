@@ -15,6 +15,7 @@
         </div>
     {{ form_end(form) }}
 
+    {% if is_granted('ROLE_ADMIN') %}
     <hr class="my-5">
 
     <div class="danger-zone">
@@ -29,5 +30,6 @@
             <button type="submit" class="btn btn-danger">Supprimer la catégorie</button>
         </form>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
