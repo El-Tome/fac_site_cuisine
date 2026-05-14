@@ -1,0 +1,252 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/admin.css">
+{% endblock %}
+
+{% macro search_bar(param_name, value, placeholder, section_id) %}
+    <form method="get" action="#{{ section_id }}" class="search-form">
+        <label for="search_{{ param_name }}" class="sr-only">{{ placeholder }}</label>
+        <input
+            id="search_{{ param_name }}"
+            type="search"
+            name="{{ param_name }}"
+            value="{{ value }}"
+            placeholder="{{ placeholder }}"
+            class="search-input"
+        >
+        <button type="submit" class="btn-search">Rechercher</button>
+    </form>
+{% endmacro %}
+
+{% macro pagination(page, total, limit, page_param, section_id, other_params) %}
+    {% set max_pages = max(1, (total / limit)|round(0, 'ceil')) %}
+    {% if max_pages > 1 %}
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ path('app_admin_dashboard', other_params|merge({(page_param): page - 1})) ~ '#' ~ section_id }}" class="page-btn">‹ Préc.</a>
+            {% endif %}
+            <span class="page-info">Page {{ page }} / {{ max_pages }}</span>
+            {% if page < max_pages %}
+                <a href="{{ path('app_admin_dashboard', other_params|merge({(page_param): page + 1})) ~ '#' ~ section_id }}" class="page-btn">Suiv. ›</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as m %}
+
+{% block body %}
+<div class="admin-wrapper">
+    <h1 id="top">Panneau d'administration</h1>
+
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash flash--{{ type }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="admin-layout">
+    {{ include('_partial/_admin_nav_bar.html.twig') }}
+    <div class="admin-main">
+
+    {# ── Utilisateurs ── #}
+    <section class="admin-section">
+        <h2 id="users">Utilisateurs <span class="count">{{ total_users }}</span></h2>
+
+        {{ m.search_bar('user_search', user_search, 'Pseudo, prénom, nom, email…', 'users') }}
+
+        {% if users is empty %}
+            <p class="empty">Aucun utilisateur trouvé{% if user_search %} pour « {{ user_search }} »{% endif %}.</p>
+        {% else %}
+            {% if user_search %}
+                <p class="search-info">{{ users|length }} résultat(s) pour « {{ user_search }} »</p>
+            {% endif %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pseudo</th>
+                        <th>Email</th>
+                        <th>Prénom / Nom</th>
+                        <th>Rôles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr {% if user == app.user %}class="row--self"{% endif %}>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.pseudo }}#{{ user.pseudoId }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.firstName }} {{ user.lastName }}</td>
+                            <td>{{ user.roles|join(', ') }}</td>
+                            <td>
+                                {% if user != app.user %}
+                                    <form method="post" action="{{ path('app_admin_delete_user', { id: user.id }) }}"
+                                          onsubmit="return confirm('Supprimer l\'utilisateur {{ user.pseudo }} ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
+                                        <button type="submit" class="btn-delete">Supprimer</button>
+                                    </form>
+                                {% else %}
+                                    <span class="label--self">Vous</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not user_search %}
+                {{ m.pagination(page_users, total_users, limit, 'page_users', 'users', app.request.query.all) }}
+            {% endif %}
+        {% endif %}
+    </section>
+
+    {# ── Recettes ── #}
+    <section class="admin-section">
+        <h2 id="recipes">Recettes <span class="count">{{ total_recipes }}</span></h2>
+
+        {{ m.search_bar('recipe_search', recipe_search, 'Titre, pseudo auteur…', 'recipes') }}
+
+        {% if recipes is empty %}
+            <p class="empty">Aucune recette trouvée{% if recipe_search %} pour « {{ recipe_search }} »{% endif %}.</p>
+        {% else %}
+            {% if recipe_search %}
+                <p class="search-info">{{ recipes|length }} résultat(s) pour « {{ recipe_search }} »</p>
+            {% endif %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>Difficulté</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for recipe in recipes %}
+                        <tr>
+                            <td>{{ recipe.id }}</td>
+                            <td>
+                                <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
+                            </td>
+                            <td>{{ recipe.author.pseudo }}#{{ recipe.author.pseudoId }}</td>
+                            <td>{{ recipe.difficulty.value }}</td>
+                            <td>
+                                <form method="post" action="{{ path('app_admin_delete_recipe', { id: recipe.id }) }}"
+                                      onsubmit="return confirm('Supprimer la recette « {{ recipe.title }} » ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
+                                    <button type="submit" class="btn-delete">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not recipe_search %}
+                {{ m.pagination(page_recipes, total_recipes, limit, 'page_recipes', 'recipes', app.request.query.all) }}
+            {% endif %}
+        {% endif %}
+    </section>
+
+    {# ── Ingrédients ── #}
+    <section class="admin-section">
+        <h2 id="ingredients">Ingrédients <span class="count">{{ total_ingredients }}</span></h2>
+
+        {{ m.search_bar('ingredient_search', ingredient_search, 'Nom de l\'ingrédient…', 'ingredients') }}
+
+        {% if ingredients is empty %}
+            <p class="empty">Aucun ingrédient trouvé{% if ingredient_search %} pour « {{ ingredient_search }} »{% endif %}.</p>
+        {% else %}
+            {% if ingredient_search %}
+                <p class="search-info">{{ ingredients|length }} résultat(s) pour « {{ ingredient_search }} »</p>
+            {% endif %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Catégories</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingredient in ingredients %}
+                        <tr>
+                            <td>{{ ingredient.id }}</td>
+                            <td>{{ ingredient.nom }}</td>
+                            <td>
+                                {% for cat in ingredient.categories %}
+                                    <span class="tag">{{ cat.name }}</span>
+                                {% else %}
+                                    <span class="empty">—</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <form method="post" action="{{ path('app_admin_delete_ingredient', { id: ingredient.id }) }}"
+                                      onsubmit="return confirm('Supprimer l\'ingrédient « {{ ingredient.nom }} » ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-ingredient-' ~ ingredient.id) }}">
+                                    <button type="submit" class="btn-delete">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not ingredient_search %}
+                {{ m.pagination(page_ingredients, total_ingredients, limit, 'page_ingredients', 'ingredients', app.request.query.all) }}
+            {% endif %}
+        {% endif %}
+    </section>
+
+    {# ── Catégories d'ingrédients ── #}
+    <section class="admin-section">
+        <h2 id="ingre_categ">Catégories d'ingrédients <span class="count">{{ total_categories }}</span></h2>
+
+        {{ m.search_bar('category_search', category_search, 'Nom de la catégorie…', 'ingre_categ') }}
+
+        {% if ingredient_categories is empty %}
+            <p class="empty">Aucune catégorie trouvée{% if category_search %} pour « {{ category_search }} »{% endif %}.</p>
+        {% else %}
+            {% if category_search %}
+                <p class="search-info">{{ ingredient_categories|length }} résultat(s) pour « {{ category_search }} »</p>
+            {% endif %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Nb. ingrédients</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in ingredient_categories %}
+                        <tr>
+                            <td>{{ category.id }}</td>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.ingredients|length }}</td>
+                            <td>
+                                <form method="post" action="{{ path('app_admin_delete_ingredient_category', { id: category.id }) }}"
+                                      onsubmit="return confirm('Supprimer la catégorie « {{ category.name }} » ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-ingredient-category-' ~ category.id) }}">
+                                    <button type="submit" class="btn-delete">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not category_search %}
+                {{ m.pagination(page_categories, total_categories, limit, 'page_categories', 'ingre_categ', app.request.query.all) }}
+            {% endif %}
+        {% endif %}
+    </section>
+
+    </div>{# /admin-main #}
+    </div>{# /admin-layout #}
+</div>
+{% endblock %}

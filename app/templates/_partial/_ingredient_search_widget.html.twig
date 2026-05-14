@@ -1,0 +1,40 @@
+{% set currentIngredient = ingredientForm.ingredient.vars.data %}
+<div class="ingredient-search-widget"
+     data-ingredient-id="{{ currentIngredient ? currentIngredient.id : '' }}"
+     data-ingredient-name="{{ currentIngredient ? currentIngredient.nom : '' }}">
+
+    <input type="text" class="ingredient-search-input form-control"
+           placeholder="Rechercher un ingrédient..." autocomplete="off">
+
+    {{ form_widget(ingredientForm.ingredient) }}
+
+    <div class="ingredient-results"></div>
+
+    <div class="ingredient-no-result">
+        Aucun résultat pour « <strong class="ingredient-search-term"></strong> ».
+        <button type="button" class="btn btn-sm btn-secondary btn-show-quick-form">Créer cet ingrédient</button>
+    </div>
+
+    <div class="ingredient-quick-form" style="display:none">
+        <div class="quick-form-row">
+            <input type="text" class="ingredient-quick-input form-control" placeholder="Nom de l'ingrédient">
+        </div>
+
+        <div class="quick-form-categories">
+            <span class="quick-form-categories-label">Catégories</span>
+            <div class="selected-categories"></div>
+            <input type="text" class="category-search-input form-control" placeholder="Rechercher une catégorie…" autocomplete="off">
+            <div class="category-results"></div>
+        </div>
+
+        <div class="quick-form-actions">
+            <button type="button" class="btn btn-sm btn-primary btn-quick-submit">Créer</button>
+            <button type="button" class="btn btn-sm btn-secondary btn-quick-cancel">Annuler</button>
+        </div>
+    </div>
+
+    <div class="ingredient-selected">
+        <span class="ingredient-selected-name"></span>
+        <button type="button" class="btn-clear" title="Changer">×</button>
+    </div>
+</div>

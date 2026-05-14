@@ -1,0 +1,246 @@
+.admin-wrapper {
+    max-width: 1260px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.admin-wrapper > h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: .5rem;
+}
+
+.admin-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.flash {
+    padding: .75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.flash--success { background: #d1fae5; color: #065f46; }
+.flash--error   { background: #fee2e2; color: #991b1b; }
+
+.admin-section {
+    margin-bottom: 2.5rem;
+}
+
+.admin-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.count {
+    background: #e2e8f0;
+    color: #475569;
+    font-size: .8rem;
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: .6rem .75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+}
+
+.admin-table tbody tr:hover {
+    background: #f1f5f9;
+}
+
+.row--self td {
+    background: #fffbeb;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    padding: .35rem .75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: .85rem;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+.tag {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 4px;
+    padding: .1rem .4rem;
+    font-size: .8rem;
+    margin-right: .2rem;
+}
+
+.label--self {
+    color: #94a3b8;
+    font-style: italic;
+    font-size: .85rem;
+}
+
+.empty {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* ── Admin nav bar (sticky sidebar) ── */
+.admin-nav {
+    position: sticky;
+    top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    width: 160px;
+    flex-shrink: 0;
+    padding: .75rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.admin-nav a {
+    color: #0369a1;
+    text-decoration: none;
+    font-size: .875rem;
+    padding: .35rem .6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.admin-nav a:hover {
+    background: #e0f2fe;
+}
+
+/* ── Header admin button ── */
+.btn-admin {
+    background: #7c3aed;
+    color: #fff;
+    text-decoration: none;
+    padding: .4rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.btn-admin:hover {
+    background: #6d28d9;
+}
+
+/* ── Search form ── */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 220px;
+    padding: .5rem .75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: .95rem;
+}
+
+.search-input:focus {
+    outline: 2px solid #7c3aed;
+    outline-offset: 1px;
+}
+
+.btn-search {
+    background: #0369a1;
+    color: #fff;
+    border: none;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .9rem;
+}
+
+.btn-search:hover { background: #0284c7; }
+
+.btn-reset {
+    color: #64748b;
+    text-decoration: none;
+    font-size: .85rem;
+    padding: .4rem .6rem;
+}
+
+.btn-reset:hover { color: #ef4444; }
+
+.search-info {
+    font-size: .85rem;
+    color: #475569;
+    margin-bottom: .5rem;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: .75rem;
+    font-size: .9rem;
+}
+
+.page-btn {
+    color: #0369a1;
+    text-decoration: none;
+    padding: .3rem .7rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+
+.page-btn:hover {
+    background: #e0f2fe;
+}
+
+.page-info {
+    color: #64748b;
+}

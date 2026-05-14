@@ -10,6 +10,9 @@
     </div>
 
     {% if app.user %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admin_dashboard') }}" class="btn btn-admin">Admin</a>
+        {% endif %}
         <a href="{{ path('app_user_profile') }}" class="btn btn-orange">{{ app.user.pseudo }}#{{ app.user.pseudoId }} </a>
     {% else %}
         <a href="{{ path('app_login') }}" class="btn btn-orange">Se connecter</a>

@@ -16,6 +16,18 @@ class IngredientCategoriesRepository extends ServiceEntityRepository
         parent::__construct($registry, IngredientCategories::class);
     }
 
+    /** @return IngredientCategories[] */
+    public function search(string $query): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.name LIKE :q')
+            ->setParameter('q', '%' . $query . '%')
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return IngredientCategories[] Returns an array of IngredientCategories objects
     //     */

@@ -33,6 +33,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    /** @return User[] */
+    public function search(string $query): array
+    {
+        $q = '%' . $query . '%';
+
+        return $this->createQueryBuilder('u')
+            ->where('u.pseudo LIKE :q OR u.email LIKE :q OR u.first_name LIKE :q OR u.last_name LIKE :q')
+            ->setParameter('q', $q)
+            ->orderBy('u.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
     /** Récupère le pseudo_id le plus grand de l'utilisateur avec le pseudo en arg. 0 si n'existe pas*/
     public function getLastPseudoIdFor(string $pseudo): int
     {

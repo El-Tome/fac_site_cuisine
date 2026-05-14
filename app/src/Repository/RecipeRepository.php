@@ -16,6 +16,21 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
+    /** @return Recipe[] */
+    public function search(string $query): array
+    {
+        $q = '%' . $query . '%';
+
+        return $this->createQueryBuilder('r')
+            ->join('r.author', 'a')
+            ->where('r.title LIKE :q OR a.pseudo LIKE :q')
+            ->setParameter('q', $q)
+            ->orderBy('r.id', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Recipe[] Returns an array of Recipe objects
 //     */
