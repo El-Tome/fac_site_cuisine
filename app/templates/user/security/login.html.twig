@@ -1,20 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/auth.css">
+{% endblock %}
 
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-card__header">
+                <div class="auth-card__icon">🍽️</div>
+                <h1 class="auth-card__title">Connexion</h1>
+                <p class="auth-card__subtitle">Bon retour parmi nous !</p>
+            </div>
 
-    <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+            {% if error %}
+                <div class="auth-alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-    {{ form_start(form) }}
-        {{ form_row(form._email) }}
-        {{ form_row(form._password) }}
+            {{ form_start(form, { attr: { class: 'auth-form' } }) }}
+                {{ form_row(form._email) }}
+                {{ form_row(form._password) }}
+                <button class="auth-submit" type="submit">Se connecter</button>
+            {{ form_end(form) }}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    {{ form_end(form) }}
+            <div class="auth-divider"><span>ou</span></div>
+
+            <div class="auth-switch">
+                <p>Pas encore de compte ?</p>
+                <a href="{{ path('app_register') }}" class="btn">Créer un compte</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
