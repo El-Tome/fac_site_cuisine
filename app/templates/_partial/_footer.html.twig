@@ -1,3 +1,13 @@
-<footer>
-    footer
+<footer class="site-footer">
+    <div class="site-footer__inner">
+        <span class="site-footer__brand">🍽 Site de cuisine</span>
+        <nav class="site-footer__links">
+            <a href="{{ path('app_home_page') }}">Accueil</a>
+            <a href="{{ path('app_meal_plan') }}">Plats de la semaine</a>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_recipe_new') }}">Créer une recette</a>
+            {% endif %}
+        </nav>
+        <span class="site-footer__copy">&copy; {{ "now"|date("Y") }} — Tous droits réservés</span>
+    </div>
 </footer>
