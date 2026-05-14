@@ -7,12 +7,13 @@ use App\Enum\Difficulty;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -59,10 +60,19 @@ class RecipeType extends AbstractType
                 ],
                 'attr' => ['min' => 1],
             ])
-            ->add('image_url', UrlType::class, [
-                'label' => 'URL de l\'image',
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image de la recette',
                 'required' => false,
-                'attr' => ['placeholder' => 'https://...'],
+                'mapped' => false,
+                'attr' => ['accept' => 'image/*'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+                        'mimeTypesMessage' => 'Veuillez choisir une image valide (JPEG, PNG, WebP, GIF).',
+                        'maxSizeMessage' => 'L\'image ne peut pas dépasser 5 Mo.',
+                    ]),
+                ],
             ])
             ->add('recipeIngredients', CollectionType::class, [
                 'entry_type' => RecipeIngredientType::class,

@@ -32,7 +32,12 @@
             </div>
 
             {{ form_row(form.difficulty, { label: 'Difficulté', attr: { class: 'form-control' } }) }}
-            {{ form_row(form.image_url, { attr: { class: 'form-control' } }) }}
+            <div class="image-upload-wrapper" id="image-upload-section">
+                {{ form_row(form.imageFile) }}
+                <div id="image-preview-container" class="image-preview-container" hidden>
+                    <img id="image-preview" src="" alt="Aperçu de l'image">
+                </div>
+            </div>
         </section>
 
         <section class="recipe-section">
@@ -104,6 +109,7 @@
 
 {% block javascripts %}
 <script src="/js/ingredient-search.js"></script>
+<script src="/js/image-upload.js"></script>
 <script>
 function renumberSteps() {
     const collection = document.getElementById('steps-collection');
