@@ -1,11 +1,17 @@
-COMPOSE        = docker compose
-COMPOSE_SIMPLE = docker compose -f compose.simple.yml
-PHP            = $(COMPOSE) exec php
-PHP_SIMPLE     = $(COMPOSE_SIMPLE) exec php
+WITH_TRAEFIK = false
 
-# --- Traefik ---
+ifeq ($(WITH_TRAEFIK), true)
+  COMPOSE = docker compose
+else
+  COMPOSE = docker compose -f compose.simple.yml
+endif
+
+PHP = $(COMPOSE) exec php
+
+# --- Docker ---
 up:
 	$(COMPOSE) up -d
+	$(PHP) composer install
 
 down:
 	$(COMPOSE) down
@@ -16,25 +22,9 @@ build:
 logs:
 	$(COMPOSE) logs -f
 
-# --- Simple (sans Traefik) ---
-up-simple:
-	$(COMPOSE_SIMPLE) up -d
-
-down-simple:
-	$(COMPOSE_SIMPLE) down
-
-build-simple:
-	$(COMPOSE_SIMPLE) build
-
-logs-simple:
-	$(COMPOSE_SIMPLE) logs -f
-
 # --- Shell ---
 shell:
 	$(PHP) sh
-
-shell-simple:
-	$(PHP_SIMPLE) sh
 
 # --- Composer ---
 composer-install:
@@ -62,17 +52,5 @@ fixtures:
 console:
 	$(PHP) php bin/console $(cmd)
 
-# --- Symfony (simple) ---
-cc-simple:
-	$(PHP_SIMPLE) php bin/console cache:clear
-
-migrate-simple:
-	$(PHP_SIMPLE) php bin/console doctrine:migrations:migrate --no-interaction
-
-console-simple:
-	$(PHP_SIMPLE) php bin/console $(cmd)
-
-.PHONY: up down build logs up-simple down-simple build-simple logs-simple \
-        shell shell-simple composer-install composer-update \
-        cc migrate migration schema-update fixtures console \
-        cc-simple migrate-simple console-simple
+.PHONY: up down build logs shell composer-install composer-update \
+        cc migrate migration schema-update fixtures console
