@@ -38,14 +38,27 @@
         <section class="recipe-section">
             <h2>Ingrédients</h2>
 
+            {% set protoHtml %}
+                <div class="collection-item">
+                    <div class="collection-item-fields">
+                        {% with { ingredientForm: form.recipeIngredients.vars.prototype } %}
+                            {% include '_partial/_ingredient_search_widget.html.twig' %}
+                            {{ form_row(form.recipeIngredients.vars.prototype.quantity, { label: 'Quantité', attr: { class: 'form-control' } }) }}
+                            {{ form_row(form.recipeIngredients.vars.prototype.unit, { label: 'Unité', attr: { class: 'form-control' } }) }}
+                        {% endwith %}
+                    </div>
+                    <button type="button" class="btn-remove-item">Supprimer</button>
+                </div>
+            {% endset %}
+
             <div id="ingredients-collection"
-                 data-prototype="{{ form_widget(form.recipeIngredients.vars.prototype)|e('html_attr') }}"
+                 data-prototype="{{ protoHtml|e('html_attr') }}"
                  data-index="{{ form.recipeIngredients|length }}">
 
                 {% for ingredientForm in form.recipeIngredients %}
                     <div class="collection-item">
                         <div class="collection-item-fields">
-                            {{ form_row(ingredientForm.ingredient, { label: 'Ingrédient', attr: { class: 'form-control' } }) }}
+                            {% include '_partial/_ingredient_search_widget.html.twig' %}
                             {{ form_row(ingredientForm.quantity, { label: 'Quantité', attr: { class: 'form-control' } }) }}
                             {{ form_row(ingredientForm.unit, { label: 'Unité', attr: { class: 'form-control' } }) }}
                         </div>
@@ -58,14 +71,15 @@
         </section>
 
         <section class="recipe-section">
-            <h2>Étapes</h2>
+            <h2>Étapes <span class="steps-hint">— glissez-déposez pour réordonner</span></h2>
 
             <div id="steps-collection"
                  data-prototype="{{ form_widget(form.recipeSteps.vars.prototype)|e('html_attr') }}"
                  data-index="{{ form.recipeSteps|length }}">
 
                 {% for stepForm in form.recipeSteps %}
-                    <div class="collection-item">
+                    <div class="collection-item step-item">
+                        <div class="drag-handle" title="Glisser pour réordonner">⠿</div>
                         <div class="collection-item-fields">
                             {{ form_row(stepForm.title, { label: 'Titre', attr: { class: 'form-control' } }) }}
                             {{ form_row(stepForm.explanation, { label: 'Explication', attr: { class: 'form-control' } }) }}
@@ -100,22 +114,77 @@
 {% endblock %}
 
 {% block javascripts %}
+<script src="/js/ingredient-search.js"></script>
 <script>
-function addCollectionItem(collectionId, buttonId) {
-    const collection = document.getElementById(collectionId);
-    const button = document.getElementById(buttonId);
+function renumberSteps() {
+    const collection = document.getElementById('steps-collection');
+    const items      = collection.querySelectorAll('.step-item');
+    items.forEach((item, idx) => {
+        item.querySelectorAll('[name]').forEach(el => {
+            el.name = el.name.replace(/\[recipeSteps\]\[\d+\]/, `[recipeSteps][${idx}]`);
+        });
+        item.querySelectorAll('[id]').forEach(el => {
+            el.id = el.id.replace(/_recipeSteps_\d+_/, `_recipeSteps_${idx}_`);
+        });
+        item.querySelectorAll('label[for]').forEach(el => {
+            el.htmlFor = el.htmlFor.replace(/_recipeSteps_\d+_/, `_recipeSteps_${idx}_`);
+        });
+    });
+    collection.dataset.index = items.length;
+}
 
-    button.addEventListener('click', () => {
-        const index = parseInt(collection.dataset.index);
+function initStepDragDrop() {
+    const collection = document.getElementById('steps-collection');
+    let draggedEl    = null;
+
+    // Activate draggable only when mousedown originates from the handle
+    collection.addEventListener('mousedown', (e) => {
+        const item = e.target.closest('.step-item');
+        if (!item) return;
+        item.draggable = !!e.target.closest('.drag-handle');
+    });
+
+    collection.addEventListener('dragstart', (e) => {
+        draggedEl = e.target.closest('.step-item');
+        if (!draggedEl) return;
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => draggedEl.classList.add('dragging'), 0);
+    });
+
+    collection.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const over = e.target.closest('.step-item');
+        if (!over || over === draggedEl) return;
+        const rect = over.getBoundingClientRect();
+        if (e.clientY < rect.top + rect.height / 2) {
+            collection.insertBefore(draggedEl, over);
+        } else {
+            over.after(draggedEl);
+        }
+    });
+
+    collection.addEventListener('dragend', () => {
+        if (draggedEl) {
+            draggedEl.classList.remove('dragging');
+            draggedEl.draggable = false;
+            draggedEl = null;
+            renumberSteps();
+        }
+    });
+}
+
+function addStepItem() {
+    const collection = document.getElementById('steps-collection');
+    document.getElementById('add-step').addEventListener('click', () => {
+        const index     = parseInt(collection.dataset.index);
         const prototype = collection.dataset.prototype.replace(/__name__/g, index);
 
         const wrapper = document.createElement('div');
-        wrapper.classList.add('collection-item');
-        wrapper.innerHTML = `
+        wrapper.classList.add('collection-item', 'step-item');
+        wrapper.innerHTML = `<div class="drag-handle" title="Glisser pour réordonner">⠿</div>
             <div class="collection-item-fields">${prototype}</div>
-            <button type="button" class="btn-remove-item">Supprimer</button>
-        `;
-
+            <button type="button" class="btn-remove-item">Supprimer</button>`;
         wrapper.querySelector('.btn-remove-item').addEventListener('click', () => wrapper.remove());
 
         collection.appendChild(wrapper);
@@ -123,9 +192,28 @@ function addCollectionItem(collectionId, buttonId) {
     });
 }
 
+function addIngredientItem() {
+    const collection = document.getElementById('ingredients-collection');
+    document.getElementById('add-ingredient').addEventListener('click', () => {
+        const index     = parseInt(collection.dataset.index);
+        const prototype = collection.dataset.prototype.replace(/__name__/g, index);
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('collection-item');
+        wrapper.innerHTML = prototype;
+        wrapper.querySelector('.btn-remove-item').addEventListener('click', () => wrapper.remove());
+
+        collection.appendChild(wrapper);
+        collection.dataset.index = index + 1;
+
+        initIngredientWidgets(wrapper);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    addCollectionItem('ingredients-collection', 'add-ingredient');
-    addCollectionItem('steps-collection', 'add-step');
+    addIngredientItem();
+    addStepItem();
+    initStepDragDrop();
 
     document.querySelectorAll('.btn-remove-item').forEach(btn => {
         btn.addEventListener('click', () => btn.closest('.collection-item').remove());

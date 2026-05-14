@@ -29,6 +29,32 @@
     margin-bottom: 0.75rem;
 }
 
+.drag-handle {
+    font-size: 1.25rem;
+    color: #bbb;
+    cursor: grab;
+    padding: 0.2rem 0.1rem;
+    line-height: 1;
+    align-self: center;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.drag-handle:hover {
+    color: #555;
+}
+
+.step-item.dragging {
+    opacity: 0.4;
+    border-style: dashed;
+}
+
+.steps-hint {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #999;
+}
+
 .collection-item-fields {
     flex: 1;
     display: grid;
@@ -66,6 +92,175 @@
     color: #666;
     font-size: 0.9rem;
     margin-top: 0.5rem;
+}
+
+.ingredient-search-widget {
+    position: relative;
+}
+
+.ingredient-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    z-index: 100;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.ingredient-result-item {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+}
+
+.ingredient-result-item:hover {
+    background: #f0f7f0;
+}
+
+.ingredient-no-result {
+    display: none;
+    background: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.ingredient-quick-form {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.quick-form-row {
+    margin-bottom: 0.5rem;
+}
+
+.quick-form-categories {
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+
+.quick-form-categories-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.35rem;
+}
+
+.selected-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+    min-height: 0;
+}
+
+.category-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #e8f4e8;
+    border: 1px solid #2d6a4f;
+    color: #2d6a4f;
+    border-radius: 20px;
+    padding: 2px 10px 2px 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2d6a4f;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 2px;
+}
+
+.chip-remove:hover {
+    color: #e53e3e;
+}
+
+.category-search-input {
+    margin-bottom: 0.25rem;
+}
+
+.category-results {
+    display: none;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.category-result-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.category-result-item:hover {
+    background: #f0f7f0;
+}
+
+.category-create-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #2d6a4f;
+    font-style: italic;
+    border-top: 1px solid #eee;
+}
+
+.category-create-item:hover {
+    background: #e8f4e8;
+}
+
+.quick-form-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ingredient-selected {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    background: #e8f4e8;
+    border: 1px solid #b7d9b7;
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+}
+
+.ingredient-selected-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.btn-clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1;
+}
+
+.btn-clear:hover {
+    color: #e53e3e;
 }
 
 .ingredient-table {

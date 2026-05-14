@@ -1,4 +1,5 @@
-{% set currentIngredient = ingredientForm.ingredient.vars.data %}
+{% set recipeIngredient = ingredientForm.vars.data %}
+{% set currentIngredient = recipeIngredient ? recipeIngredient.ingredient : null %}
 <div class="ingredient-search-widget"
      data-ingredient-id="{{ currentIngredient ? currentIngredient.id : '' }}"
      data-ingredient-name="{{ currentIngredient ? currentIngredient.nom : '' }}">
@@ -12,9 +13,12 @@
 
     <div class="ingredient-no-result">
         Aucun résultat pour « <strong class="ingredient-search-term"></strong> ».
-        <button type="button" class="btn btn-sm btn-secondary btn-show-quick-form">Créer cet ingrédient</button>
+        {% if is_granted('ROLE_EDITOR') %}
+            <button type="button" class="btn btn-sm btn-secondary btn-show-quick-form">Créer cet ingrédient</button>
+        {% endif %}
     </div>
 
+    {% if is_granted('ROLE_EDITOR') %}
     <div class="ingredient-quick-form" style="display:none">
         <div class="quick-form-row">
             <input type="text" class="ingredient-quick-input form-control" placeholder="Nom de l'ingrédient">
@@ -32,6 +36,7 @@
             <button type="button" class="btn btn-sm btn-secondary btn-quick-cancel">Annuler</button>
         </div>
     </div>
+    {% endif %}
 
     <div class="ingredient-selected">
         <span class="ingredient-selected-name"></span>

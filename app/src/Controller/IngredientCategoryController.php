@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/ingredient/category')]
-#[IsGranted('ROLE_USER')]
 final class IngredientCategoryController extends AbstractController
 {
     #[Route('', name: 'app_ingredient_category_index', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(IngredientCategoriesRepository $repository): Response
     {
         return $this->render('ingredient_category/index.html.twig', [
@@ -25,6 +25,7 @@ final class IngredientCategoryController extends AbstractController
     }
 
     #[Route('/new', name: 'app_ingredient_category_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_EDITOR')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $category = new IngredientCategories();
@@ -46,6 +47,7 @@ final class IngredientCategoryController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_ingredient_category_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_EDITOR')]
     public function edit(IngredientCategories $category, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(IngredientCategoryType::class, $category);
@@ -66,6 +68,7 @@ final class IngredientCategoryController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_ingredient_category_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted('ROLE_EDITOR')]
     public function delete(IngredientCategories $category, Request $request, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete-category-' . $category->getId(), $request->request->get('_token'))) {
