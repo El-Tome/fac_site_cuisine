@@ -80,6 +80,13 @@
     background: #fffbeb;
 }
 
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    flex-wrap: wrap;
+}
+
 .btn-delete {
     background: #ef4444;
     color: #fff;
@@ -93,6 +100,47 @@
 .btn-delete:hover {
     background: #dc2626;
 }
+
+.btn-promote {
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    padding: .35rem .75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: .85rem;
+}
+
+.btn-promote:hover {
+    background: #15803d;
+}
+
+.btn-demote {
+    background: #ea580c;
+    color: #fff;
+    border: none;
+    padding: .35rem .75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: .85rem;
+}
+
+.btn-demote:hover {
+    background: #c2410c;
+}
+
+.role-badge {
+    display: inline-block;
+    border-radius: 4px;
+    padding: .1rem .4rem;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-right: .2rem;
+}
+
+.role-badge--user    { background: #e2e8f0; color: #475569; }
+.role-badge--editor  { background: #dbeafe; color: #1d4ed8; }
+.role-badge--admin   { background: #ede9fe; color: #6d28d9; }
 
 .tag {
     display: inline-block;

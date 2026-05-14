@@ -82,16 +82,38 @@
                             <td>{{ user.pseudo }}#{{ user.pseudoId }}</td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.firstName }} {{ user.lastName }}</td>
-                            <td>{{ user.roles|join(', ') }}</td>
                             <td>
-                                {% if user != app.user %}
-                                    <form method="post" action="{{ path('app_admin_delete_user', { id: user.id }) }}"
-                                          onsubmit="return confirm('Supprimer l\'utilisateur {{ user.pseudo }} ?')">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
-                                        <button type="submit" class="btn-delete">Supprimer</button>
-                                    </form>
-                                {% else %}
+                                {% for role in user.roles %}
+                                    {% if role != 'ROLE_USER' %}
+                                        <span class="role-badge role-badge--{{ role|lower|replace({'role_': ''}) }}">{{ role|replace({'ROLE_': ''}) }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="role-badge role-badge--user">USER</span>
+                            </td>
+                            <td>
+                                {% if user == app.user %}
                                     <span class="label--self">Vous</span>
+                                {% else %}
+                                    <div class="table-actions">
+                                        {% if 'ROLE_ADMIN' not in user.roles %}
+                                            {% if 'ROLE_EDITOR' in user.roles %}
+                                                <form method="post" action="{{ path('app_admin_demote_user', { id: user.id }) }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('demote-user-' ~ user.id) }}">
+                                                    <button type="submit" class="btn-demote">Rétrograder</button>
+                                                </form>
+                                            {% else %}
+                                                <form method="post" action="{{ path('app_admin_promote_user', { id: user.id }) }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('promote-user-' ~ user.id) }}">
+                                                    <button type="submit" class="btn-promote">Promouvoir</button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                        <form method="post" action="{{ path('app_admin_delete_user', { id: user.id }) }}"
+                                              onsubmit="return confirm('Supprimer l\'utilisateur {{ user.pseudo }} ?')">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
+                                            <button type="submit" class="btn-delete">Supprimer</button>
+                                        </form>
+                                    </div>
                                 {% endif %}
                             </td>
                         </tr>

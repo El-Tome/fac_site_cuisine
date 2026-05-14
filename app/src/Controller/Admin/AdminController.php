@@ -96,6 +96,58 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_dashboard');
     }
 
+    #[Route('/user/{id}/promote', name: 'app_admin_promote_user', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function promoteUser(User $user, Request $request, EntityManagerInterface $em): Response
+    {
+        if ($user === $this->getUser()) {
+            $this->addFlash('error', 'Impossible de modifier votre propre rôle.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            $this->addFlash('error', 'Impossible de modifier le rôle d\'un administrateur.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        if ($this->isCsrfTokenValid('promote-user-' . $user->getId(), $request->request->get('_token'))) {
+            $roles = array_values(array_filter($user->getRoles(), fn($r) => $r !== 'ROLE_USER'));
+            if (!in_array('ROLE_EDITOR', $roles, true)) {
+                $roles[] = 'ROLE_EDITOR';
+            }
+            $user->setRoles($roles);
+            $em->flush();
+            $this->addFlash('success', sprintf('%s promu éditeur.', $user->getPseudo()));
+        }
+
+        return $this->redirectToRoute('app_admin_dashboard');
+    }
+
+    #[Route('/user/{id}/demote', name: 'app_admin_demote_user', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function demoteUser(User $user, Request $request, EntityManagerInterface $em): Response
+    {
+        if ($user === $this->getUser()) {
+            $this->addFlash('error', 'Impossible de modifier votre propre rôle.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            $this->addFlash('error', 'Impossible de modifier le rôle d\'un administrateur.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        if ($this->isCsrfTokenValid('demote-user-' . $user->getId(), $request->request->get('_token'))) {
+            $roles = array_values(array_filter(
+                $user->getRoles(),
+                fn($r) => !in_array($r, ['ROLE_USER', 'ROLE_EDITOR'], true)
+            ));
+            $user->setRoles($roles);
+            $em->flush();
+            $this->addFlash('success', sprintf('Rôle éditeur retiré à %s.', $user->getPseudo()));
+        }
+
+        return $this->redirectToRoute('app_admin_dashboard');
+    }
+
     #[Route('/recipe/{id}/delete', name: 'app_admin_delete_recipe', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function deleteRecipe(Recipe $recipe, Request $request, EntityManagerInterface $em): Response
     {
