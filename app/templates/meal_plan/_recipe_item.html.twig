@@ -1,0 +1,25 @@
+<li class="meal-plan-item" data-recipe-id="{{ recipe.id }}">
+    {% if recipe.imageUrl %}
+        <img src="{{ recipe.imageUrl }}" alt="{{ recipe.title }}" class="meal-plan-item__image">
+    {% else %}
+        <div class="meal-plan-item__image meal-plan-item__image--placeholder"></div>
+    {% endif %}
+    <div class="meal-plan-item__body">
+        <span class="meal-plan-item__day">Plat {{ index }}</span>
+        <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="meal-plan-item__title">
+            {{ recipe.title }}
+        </a>
+        <p class="meal-plan-item__description">
+            {{ recipe.description|slice(0, 120) }}{% if recipe.description|length > 120 %}…{% endif %}
+        </p>
+        <div class="meal-plan-item__meta">
+            <span>{{ recipe.difficulty.getLabel() }}</span>
+            <span>⏱ {{ recipe.prepTime }} min</span>
+            {% if recipe.cookTime %}
+                <span>🔥 {{ recipe.cookTime }} min</span>
+            {% endif %}
+            <span>🍽 {{ recipe.servings }} pers.</span>
+        </div>
+    </div>
+    <button type="button" class="btn-reroll" data-recipe-id="{{ recipe.id }}" title="Proposer une autre recette">↻</button>
+</li>

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes sélections sauvegardées{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/meal-plan.css">
+{% endblock %}
+
+{% block body %}
+<div class="container meal-plan-page">
+    <div class="meal-plan-header">
+        <h1>Mes sélections sauvegardées</h1>
+        <a href="{{ path('app_meal_plan') }}" class="btn btn-secondary">Nouvelle sélection</a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% if plans is empty %}
+        <p class="meal-plan-empty">Vous n'avez pas encore de sélection sauvegardée.</p>
+    {% else %}
+        <div class="saved-plans-list">
+            {% for plan in plans %}
+                <div class="saved-plan-card">
+                    <div class="saved-plan-card__header">
+                        <span class="saved-plan-card__date">{{ plan.createdAt|date('d/m/Y à H:i') }}</span>
+                        <span class="saved-plan-card__count">{{ plan.recipes|length }} plat{{ plan.recipes|length > 1 ? 's' : '' }}</span>
+                        <form method="post" action="{{ path('app_meal_plan_delete', { id: plan.id }) }}"
+                              onsubmit="return confirm('Supprimer cette sélection ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-meal-plan-' ~ plan.id) }}">
+                            <button type="submit" class="btn-delete-plan" title="Supprimer">✕</button>
+                        </form>
+                    </div>
+                    <ul class="saved-plan-card__recipes">
+                        {% for recipe in plan.recipes %}
+                            <li>
+                                <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
+                                <span class="saved-plan-recipe-meta">{{ recipe.difficulty.getLabel() }} · {{ recipe.prepTime }} min</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes plats de la semaine{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/meal-plan.css">
+{% endblock %}
+
+{% block body %}
+<div class="container meal-plan-page">
+    <div class="meal-plan-header">
+        <h1>Mes plats de la semaine</h1>
+        {% if app.user %}
+            <a href="{{ path('app_meal_plan_saved') }}" class="btn btn-secondary">Mes sélections</a>
+        {% endif %}
+    </div>
+
+    <form method="get" action="{{ path('app_meal_plan') }}" class="meal-plan-form">
+        <label for="meal-count">Combien de plats voulez-vous ?</label>
+        <div class="meal-plan-form__row">
+            <input
+                type="number"
+                id="meal-count"
+                name="count"
+                min="1"
+                max="20"
+                value="{{ count ?? '' }}"
+                placeholder="Ex : 7"
+                class="form-control meal-count-input"
+            >
+            <button type="submit" class="btn btn-primary">
+                {{ count ? 'Regénérer tout' : 'Proposer des plats' }}
+            </button>
+        </div>
+    </form>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {% if count and recipes is empty %}
+        <p class="meal-plan-empty">Aucune recette disponible pour le moment.</p>
+    {% endif %}
+
+    {% if recipes is not empty %}
+        <div class="meal-plan-results-header">
+            <p class="meal-plan-subtitle">{{ recipes|length }} plat{{ recipes|length > 1 ? 's' : '' }} proposé{{ recipes|length > 1 ? 's' : '' }}</p>
+            {% if app.user %}
+                <form id="save-form" method="post" action="{{ path('app_meal_plan_save') }}">
+                    <button type="submit" class="btn btn-primary">Sauvegarder ma sélection</button>
+                </form>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn btn-secondary">Connectez-vous pour sauvegarder</a>
+            {% endif %}
+        </div>
+
+        <ol class="meal-plan-list" id="meal-plan-list">
+            {% for recipe in recipes %}
+                {% include 'meal_plan/_recipe_item.html.twig' with { recipe: recipe, index: loop.index } %}
+            {% endfor %}
+        </ol>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/meal-plan.js"></script>
+{% endblock %}

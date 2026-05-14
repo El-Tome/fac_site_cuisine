@@ -39,6 +39,31 @@ class RecipeRepository extends ServiceEntityRepository
     }
 
     /** @return Recipe[] */
+    public function findRandomExcluding(array $excludeIds, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('r')->select('r.id');
+
+        if (!empty($excludeIds)) {
+            $qb->where('r.id NOT IN (:exclude)')->setParameter('exclude', $excludeIds);
+        }
+
+        $ids = $qb->getQuery()->getSingleColumnResult();
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        shuffle($ids);
+        $selectedIds = array_slice($ids, 0, $limit);
+
+        return $this->createQueryBuilder('r')
+            ->where('r.id IN (:ids)')
+            ->setParameter('ids', $selectedIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return Recipe[] */
     public function search(string $query): array
     {
         $q = '%' . $query . '%';
