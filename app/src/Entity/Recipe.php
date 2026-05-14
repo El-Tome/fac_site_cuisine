@@ -54,10 +54,17 @@ class Recipe
     #[ORM\OneToMany(targetEntity: RecipeIngredients::class, mappedBy: 'recipe', cascade: ['persist'], orphanRemoval: true)]
     private Collection $recipeIngredients;
 
+    /**
+     * @var Collection<int, RecipeLike>
+     */
+    #[ORM\OneToMany(targetEntity: RecipeLike::class, mappedBy: 'recipe', orphanRemoval: true)]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->recipeSteps = new ArrayCollection();
         $this->recipeIngredients = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,5 +226,18 @@ class Recipe
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeLike>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function getLikeCount(): int
+    {
+        return $this->likes->count();
     }
 }

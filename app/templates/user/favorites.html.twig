@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes favoris{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="favorites-title">Mes favoris <span class="like-heart liked-heart-display">♥</span></h1>
+
+    {% if likedRecipes is empty %}
+        <div class="favorites-empty">
+            <p>Vous n'avez pas encore aimé de recette.</p>
+            <a href="{{ path('app_home_page') }}" class="btn btn-primary">Découvrir des recettes</a>
+        </div>
+    {% else %}
+        <p class="text-muted mb-4">{{ likedRecipes|length }} recette(s) dans vos favoris</p>
+
+        <div class="favorites-grid">
+            {% for recipe in likedRecipes %}
+                <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="favorite-card">
+                    {% if recipe.imageUrl %}
+                        <div class="favorite-card-img" style="background-image: url('{{ recipe.imageUrl }}')"></div>
+                    {% else %}
+                        <div class="favorite-card-img favorite-card-no-img">🍽</div>
+                    {% endif %}
+                    <div class="favorite-card-body">
+                        <h3 class="favorite-card-title">{{ recipe.title }}</h3>
+                        <div class="favorite-card-meta">
+                            <span>{{ recipe.difficulty.getLabel() }}</span>
+                            <span>{{ recipe.prepTime }} min</span>
+                            <span>par {{ recipe.author.pseudo }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

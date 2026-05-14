@@ -1,49 +1,40 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Mon profil{% endblock %}
+
 {% block body %}
-    <div>
-        {% if app.session.flashbag.has('success') %}
-            <div role="alert">
-                {% for message in app.session.flashbag.get('success') %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
+<div class="container mt-5">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
 
-        <h1>Salut {{ user.firstName }} {{ user.lastName }}</h1>
+    <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+    <p class="text-muted">{{ user.pseudo }}#{{ user.pseudoId }}</p>
 
-        <div>
-            <a href="{{ path('app_user_edit') }}">Modifier mon profil</a>
-        </div>
-
-        <div>
-            <a href="{{ path('app_user_delete') }}">Supprimer mon compte</a>
-        </div>
-
-        <div>
-            <a href="{{ path('app_logout') }}">Déconnexion</a>
-        </div>
-
-        <div>
-            <h2>Mes recettes</h2>
-            <a href="{{ path('app_recipe_new') }}">+ Créer une recette</a>
-
-            {% if recipes is empty %}
-                <p>Vous n'avez pas encore créé de recette.</p>
-            {% else %}
-                <ul>
-                    {% for recipe in recipes %}
-                        <li>
-                            <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
-                            —
-                            <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}">Modifier</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-        {#        plat like#}
-        {#        utilisateur suivie#}
+    <div class="profile-links mt-3">
+        <a href="{{ path('app_user_edit') }}" class="btn btn-secondary">Modifier mon profil</a>
+        <a href="{{ path('app_logout') }}" class="btn btn-secondary">Déconnexion</a>
+        <a href="{{ path('app_user_delete') }}" class="btn btn-danger">Supprimer mon compte</a>
     </div>
+
+    <section class="profile-section mt-5">
+        <div class="profile-section-header">
+            <h2>Mes recettes</h2>
+            <a href="{{ path('app_recipe_new') }}" class="btn btn-primary btn-sm">+ Créer</a>
+        </div>
+
+        {% if recipes is empty %}
+            <p class="text-muted">Vous n'avez pas encore créé de recette.</p>
+        {% else %}
+            <ul class="profile-recipe-list">
+                {% for recipe in recipes %}
+                    <li>
+                        <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">{{ recipe.title }}</a>
+                        <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}" class="btn btn-sm btn-secondary">Modifier</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}

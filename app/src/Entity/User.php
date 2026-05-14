@@ -52,9 +52,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Recipe::class, mappedBy: 'author_id', orphanRemoval: true)]
     private Collection $recipes;
 
+    /**
+     * @var Collection<int, RecipeLike>
+     */
+    #[ORM\OneToMany(targetEntity: RecipeLike::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int

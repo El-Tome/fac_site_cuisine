@@ -1,113 +1,218 @@
+/* =============================================
+   RECIPE FORM + INGREDIENT MANAGEMENT
+   Shared stylesheet for recipe new/edit and ingredient pages
+   ============================================= */
+
+/* ----- Page heading (recipe form pages) ----- */
+
+.recipe-form-page > h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin-bottom: 0.35rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e8ede9;
+}
+
+/* ----- Section cards ----- */
+
 .recipe-section {
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #2d6a4f;
+    border-radius: 10px;
+    padding: 1.75rem;
     margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .recipe-section h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: #333;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2d6a4f;
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e8ede9;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
+.steps-hint {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* ----- Form controls ----- */
+
+.form-control {
+    width: 100%;
+    padding: 0.6rem 0.875rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #fafafa;
+    color: #1c1c1c;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2d6a4f;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.recipe-section label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ----- 3-column row group ----- */
 
 .form-row-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 1rem;
 }
+
+/* ----- Collection items (ingredients & steps) ----- */
 
 .collection-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
     margin-bottom: 0.75rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.drag-handle {
-    font-size: 1.25rem;
-    color: #bbb;
-    cursor: grab;
-    padding: 0.2rem 0.1rem;
-    line-height: 1;
-    align-self: center;
-    flex-shrink: 0;
-    user-select: none;
-}
-
-.drag-handle:hover {
-    color: #555;
-}
-
-.step-item.dragging {
-    opacity: 0.4;
-    border-style: dashed;
-}
-
-.steps-hint {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #999;
+.collection-item:hover {
+    border-color: #a7c4b5;
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.07);
 }
 
 .collection-item-fields {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 0.75rem;
 }
 
+/* ----- Drag handle (steps) ----- */
+
+.drag-handle {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    cursor: grab;
+    padding: 0.3rem 0.1rem;
+    line-height: 1;
+    align-self: center;
+    flex-shrink: 0;
+    user-select: none;
+    transition: color 0.15s;
+}
+
+.drag-handle:hover  { color: #2d6a4f; }
+.drag-handle:active { cursor: grabbing; }
+
+.step-item.dragging {
+    opacity: 0.35;
+    border-style: dashed;
+    border-color: #2d6a4f;
+}
+
+/* ----- Remove button ----- */
+
 .btn-remove-item {
-    background: #e53e3e;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.4rem 0.75rem;
+    background: none;
+    color: #9ca3af;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
     cursor: pointer;
     white-space: nowrap;
     align-self: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    flex-shrink: 0;
 }
 
 .btn-remove-item:hover {
-    background: #c53030;
+    background: #fff5f5;
+    color: #dc2626;
+    border-color: #fca5a5;
 }
 
-.recipe-image {
-    max-width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
+/* ----- Add collection buttons ----- */
 
-.recipe-meta {
+.btn-add {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    color: #666;
-    font-size: 0.9rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
     margin-top: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: none;
+    color: #2d6a4f;
+    border: 1.5px dashed #40916c;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-style 0.15s;
 }
 
-.ingredient-search-widget {
-    position: relative;
+.btn-add:hover {
+    background: #f0faf5;
+    border-style: solid;
 }
+
+/* ----- Form action row (submit / cancel) ----- */
+
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ----- Ingredient search widget ----- */
+
+.ingredient-search-widget { position: relative; }
 
 .ingredient-results {
     display: none;
     position: absolute;
-    top: 100%;
+    top: calc(100% + 3px);
     left: 0;
     right: 0;
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     z-index: 100;
     max-height: 220px;
     overflow-y: auto;
@@ -116,33 +221,32 @@
 .ingredient-result-item {
     padding: 0.6rem 1rem;
     cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.1s;
 }
 
-.ingredient-result-item:hover {
-    background: #f0f7f0;
-}
+.ingredient-result-item:hover { background: #f0faf5; }
 
 .ingredient-no-result {
     display: none;
-    background: #fffbe6;
-    border: 1px solid #ffe58f;
-    border-radius: 6px;
+    background: #fffbeb;
+    border: 1.5px solid #fcd34d;
+    border-radius: 8px;
     padding: 0.6rem 1rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     margin-top: 0.25rem;
+    color: #92400e;
 }
 
 .ingredient-quick-form {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 0.75rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
     margin-top: 0.5rem;
 }
 
-.quick-form-row {
-    margin-bottom: 0.5rem;
-}
+.quick-form-row { margin-bottom: 0.5rem; }
 
 .quick-form-categories {
     margin-bottom: 0.75rem;
@@ -151,10 +255,12 @@
 
 .quick-form-categories-label {
     display: block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #555;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
     margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .selected-categories {
@@ -169,12 +275,12 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    background: #e8f4e8;
-    border: 1px solid #2d6a4f;
-    color: #2d6a4f;
+    background: #d1fae5;
+    border: 1px solid #6ee7b7;
+    color: #065f46;
     border-radius: 20px;
-    padding: 2px 10px 2px 10px;
-    font-size: 0.82rem;
+    padding: 2px 10px;
+    font-size: 0.8rem;
     font-weight: 500;
 }
 
@@ -182,27 +288,24 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #2d6a4f;
+    color: #059669;
     font-size: 1rem;
     line-height: 1;
     padding: 0;
     margin-left: 2px;
+    transition: color 0.15s;
 }
 
-.chip-remove:hover {
-    color: #e53e3e;
-}
+.chip-remove:hover { color: #dc2626; }
 
-.category-search-input {
-    margin-bottom: 0.25rem;
-}
+.category-search-input { margin-bottom: 0.25rem; }
 
 .category-results {
     display: none;
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     max-height: 160px;
     overflow-y: auto;
 }
@@ -211,11 +314,10 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: background 0.1s;
 }
 
-.category-result-item:hover {
-    background: #f0f7f0;
-}
+.category-result-item:hover { background: #f0faf5; }
 
 .category-create-item {
     padding: 0.5rem 1rem;
@@ -223,12 +325,11 @@
     font-size: 0.9rem;
     color: #2d6a4f;
     font-style: italic;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #f3f4f6;
+    transition: background 0.1s;
 }
 
-.category-create-item:hover {
-    background: #e8f4e8;
-}
+.category-create-item:hover { background: #f0faf5; }
 
 .quick-form-actions {
     display: flex;
@@ -239,29 +340,32 @@
     display: none;
     align-items: center;
     gap: 0.5rem;
-    background: #e8f4e8;
-    border: 1px solid #b7d9b7;
-    border-radius: 6px;
-    padding: 0.4rem 0.75rem;
+    background: #d1fae5;
+    border: 1.5px solid #6ee7b7;
+    border-radius: 8px;
+    padding: 0.45rem 0.875rem;
 }
 
 .ingredient-selected-name {
     flex: 1;
-    font-weight: 500;
+    font-weight: 600;
+    color: #065f46;
+    font-size: 0.9rem;
 }
 
 .btn-clear {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.1rem;
-    color: #666;
+    font-size: 1.2rem;
+    color: #9ca3af;
     line-height: 1;
+    transition: color 0.15s;
 }
 
-.btn-clear:hover {
-    color: #e53e3e;
-}
+.btn-clear:hover { color: #dc2626; }
+
+/* ----- Ingredient & category management pages ----- */
 
 .manage-header {
     display: flex;
@@ -272,6 +376,13 @@
     gap: 1rem;
 }
 
+.manage-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin: 0;
+}
+
 .manage-header-actions {
     display: flex;
     gap: 0.5rem;
@@ -279,6 +390,9 @@
 
 .table-actions {
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .category-filter-input {
@@ -299,6 +413,10 @@
     gap: 0.4rem;
     cursor: pointer;
     font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    color: #1c1c1c;
 }
 
 .ingredient-table {
@@ -309,55 +427,76 @@
 .ingredient-table th,
 .ingredient-table td {
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e5e7eb;
     text-align: left;
 }
 
 .ingredient-table th {
-    background: #f5f5f5;
-    font-weight: 600;
+    background: #f9fafb;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
+
+.ingredient-table tbody tr:hover { background: #f9fafb; }
 
 .badge {
     display: inline-block;
-    background: #e8f4e8;
-    color: #2d6a2d;
+    background: #d1fae5;
+    color: #065f46;
     border-radius: 12px;
     padding: 2px 10px;
-    font-size: 0.8rem;
-    margin-right: 4px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-right: 3px;
 }
+
+.text-muted { color: #9ca3af; }
 
 .btn-sm {
     padding: 4px 10px;
     font-size: 0.85rem;
 }
 
-.text-muted {
-    color: #999;
-}
+/* ----- Danger zone (recipe edit) ----- */
 
 .danger-zone {
-    border: 1px solid #e53e3e;
-    border-radius: 8px;
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
     padding: 1.5rem;
     background: #fff5f5;
 }
 
 .danger-zone h3 {
-    color: #c53030;
-    margin-bottom: 0.5rem;
+    color: #dc2626;
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
-.btn-danger {
-    background: #e53e3e;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+.danger-zone p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
 }
 
-.btn-danger:hover {
-    background: #c53030;
+/* ----- Recipe show page ----- */
+
+.recipe-image {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.recipe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
 }

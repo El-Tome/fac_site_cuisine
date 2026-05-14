@@ -45,8 +45,20 @@
         </ol>
     </section>
 
-    <div class="mt-4">
+    <div class="recipe-actions mt-4">
         <a href="{{ path('app_home_page') }}" class="btn btn-secondary">Retour</a>
+
+        {% if app.user %}
+            <button id="like-btn"
+                    class="btn-like {% if isLiked %}liked{% endif %}"
+                    data-recipe-id="{{ recipe.id }}"
+                    data-token="{{ csrf_token('like-recipe-' ~ recipe.id) }}">
+                <span class="like-heart">♥</span>
+                <span id="like-count">{{ likeCount }}</span>
+            </button>
+        {% else %}
+            <span class="btn-like-display">♥ {{ likeCount }}</span>
+        {% endif %}
 
         {% if app.user and app.user == recipe.author %}
             <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}" class="btn btn-primary">Modifier</a>
@@ -60,4 +72,34 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{% if app.user %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const btn   = document.getElementById('like-btn');
+    const count = document.getElementById('like-count');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+        btn.disabled = true;
+
+        const body = new URLSearchParams({ _token: btn.dataset.token });
+        const res  = await fetch(`/recipe/${btn.dataset.recipeId}/like`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body:    body.toString(),
+        });
+
+        if (!res.ok) { btn.disabled = false; return; }
+
+        const data = await res.json();
+        btn.classList.toggle('liked', data.liked);
+        count.textContent = data.count;
+        btn.disabled = false;
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

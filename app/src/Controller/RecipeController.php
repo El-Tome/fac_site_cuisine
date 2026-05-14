@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Recipe;
 use App\Form\RecipeType;
+use App\Repository\RecipeLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,10 +41,17 @@ final class RecipeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_recipe_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(Recipe $recipe): Response
+    public function show(Recipe $recipe, RecipeLikeRepository $likeRepository): Response
     {
+        $isLiked = false;
+        if ($this->getUser()) {
+            $isLiked = $likeRepository->findOneByUserAndRecipe($this->getUser(), $recipe) !== null;
+        }
+
         return $this->render('recipe/show.html.twig', [
-            'recipe' => $recipe,
+            'recipe'    => $recipe,
+            'isLiked'   => $isLiked,
+            'likeCount' => $likeRepository->countByRecipe($recipe),
         ]);
     }
 
